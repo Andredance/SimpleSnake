@@ -1,0 +1,11 @@
+.board {
+    width: calc(20 * 26px);
+    margin: auto;
+}
+.board div {
+    background: black;
+    border: 1px solid grey;
+    float: left;
+    width: 24px;
+    height: 24px;
+}
