@@ -79,8 +79,9 @@
           break;
       }
       if (snakeX < 0 || snakeY < 0 ||
-        snakeX >= boardWidth || snakeY >= boardHeight ||
+        snakeX > boardWidth || snakeY > boardHeight ||
         snakeLength === 400 || snake.indexOf(board[snakeY][snakeX]) > -1) {
+        console.log(snakeX, snakeY, snakeLength, snake.indexOf(board[snakeY][snakeX]), board[snakeY][snakeX]);
         alert('Game over!');
         startGame();
       }
