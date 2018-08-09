@@ -9,3 +9,11 @@
     width: 24px;
     height: 24px;
 }
+
+.board .snake {
+    background: green;
+}
+
+.board .apple {
+    background: red;
+}

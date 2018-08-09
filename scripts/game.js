@@ -2,29 +2,112 @@
   const boardHeight = 20;
   const boardWidth = 20;
   const boardDiv = document.getElementById('board');
+  const body = document.getElementById('body');
   let board = [];
   let snakeX = 0;
   let snakeY = 0;
-  let direction = 'Up';
+  let snakeDirection = 'Up';
   let snakeLength = 3;
+  let appleX = 0;
+  let appleY = 0;
+  let snake = [];
+  let apple = {};
 
-  (function initBoard(height, width) {
-    for (let i = 0; i < height; i++){
+  (function initBoard() {
+    for (let i = 0; i < boardHeight; i++){
       let row = [];
-      for (let j = 0; j < width; j++){
-        let cell = {
-          snake: 0
-        };
+      for (let j = 0; j < boardWidth; j++){
+        let cell = {};
         cell.element = document.createElement('div');
         boardDiv.appendChild(cell.element);
         row.push(cell);
       }
       board.push(row);
     }
-  })(boardHeight, boardWidth);
-  (function startGame() {
-    snakeX = Math.floor(boardWidth / 2);
-    snakeY = Math.floor(boardHeight / 2);
-    board[snakeX][snakeY].snake = 1;
+    body.addEventListener('keydown', (event) => {
+      switch (event.key) {
+        case 'ArrowUp':
+          snakeDirection = (snakeDirection !== 'Down') ? 'Up' : snakeDirection;
+          break;
+        case 'ArrowDown':
+          snakeDirection = (snakeDirection !== 'Up') ? 'Down' : snakeDirection;
+          break;
+        case 'ArrowLeft':
+          snakeDirection = (snakeDirection !== 'Right') ? 'Left' : snakeDirection;
+          break;
+        case 'ArrowRight':
+          snakeDirection = (snakeDirection !== 'Left') ? 'Right' : snakeDirection;
+          break;
+        default:
+          return;
+      }
+      event.preventDefault();
+    });
   })();
+
+  function startGame() {
+    for (let i = 0; i < boardHeight; i++) {
+      for (let j = 0; j < boardWidth; j++) {
+        board[i][j].element.className = '';
+      }
+    }
+    snake = [];
+    apple = {};
+    snakeLength = 3;
+    snakeDirection = 'Up';
+    snakeX = Math.floor(Math.random() * (boardWidth - 6));
+    snakeY = Math.floor(Math.random() * (boardHeight - 6));
+    snake.push(board[snakeY+2][snakeX]);
+    snake.push(board[snakeY+1][snakeX]);
+    snake.push(board[snakeY][snakeX]);
+    snake.forEach(value => value.element.className = 'snake');
+    placeApple();
+    gameLoop();
+  }
+
+  function gameLoop() {
+    switch (snakeDirection) {
+      case 'Up':
+        snakeY--;
+        break;
+      case 'Down':
+        snakeY++;
+        break;
+      case 'Left':
+        snakeX--;
+        break;
+      case 'Right':
+        snakeX++;
+        break;
+    }
+    if (snakeX < 0 || snakeY < 0 ||
+        snakeX >= boardWidth || snakeY >= boardHeight ||
+        snakeLength === 400 || snake.indexOf(board[snakeY][snakeX]) > -1) {
+      alert('Game over!');
+      startGame();
+    }
+    else {
+      let cell = board[snakeY][snakeX];
+      cell.element.className = 'snake';
+      snake.push(cell);
+      if (cell === apple) {
+        apple.element.className = 'snake';
+        placeApple();
+      } else {
+        let last = snake.shift();
+        last.element.className = '';
+      }
+      setTimeout(gameLoop, 200);
+    }
+  }
+
+  function placeApple() {
+    appleX = Math.floor(Math.random() * boardWidth);
+    appleY = Math.floor(Math.random() * boardHeight);
+    apple = board[appleY][appleX];
+    if (snake.indexOf(apple) > -1)
+      placeApple();
+    apple.element.className = 'apple';
+  }
+  startGame();
 })();
