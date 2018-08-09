@@ -45,7 +45,7 @@
     });
   })();
 
-  function startGame() {
+  (function startGame() {
     for (let i = 0; i < boardHeight; i++) {
       for (let j = 0; j < boardWidth; j++) {
         board[i][j].element.className = '';
@@ -55,51 +55,52 @@
     apple = {};
     snakeLength = 3;
     snakeDirection = 'Up';
-    snakeX = Math.floor(Math.random() * (boardWidth - 6));
-    snakeY = Math.floor(Math.random() * (boardHeight - 6));
+    snakeX = Math.floor(Math.random() * (boardWidth-11) + 6);
+    snakeY = Math.floor(Math.random() * (boardHeight-11) + 6);
     snake.push(board[snakeY+2][snakeX]);
     snake.push(board[snakeY+1][snakeX]);
     snake.push(board[snakeY][snakeX]);
     snake.forEach(value => value.element.className = 'snake');
     placeApple();
-    gameLoop();
-  }
 
-  function gameLoop() {
-    switch (snakeDirection) {
-      case 'Up':
-        snakeY--;
-        break;
-      case 'Down':
-        snakeY++;
-        break;
-      case 'Left':
-        snakeX--;
-        break;
-      case 'Right':
-        snakeX++;
-        break;
-    }
-    if (snakeX < 0 || snakeY < 0 ||
+    (function gameLoop() {
+      switch (snakeDirection) {
+        case 'Up':
+          snakeY--;
+          break;
+        case 'Down':
+          snakeY++;
+          break;
+        case 'Left':
+          snakeX--;
+          break;
+        case 'Right':
+          snakeX++;
+          break;
+      }
+      if (snakeX < 0 || snakeY < 0 ||
         snakeX >= boardWidth || snakeY >= boardHeight ||
         snakeLength === 400 || snake.indexOf(board[snakeY][snakeX]) > -1) {
-      alert('Game over!');
-      startGame();
-    }
-    else {
-      let cell = board[snakeY][snakeX];
-      cell.element.className = 'snake';
-      snake.push(cell);
-      if (cell === apple) {
-        apple.element.className = 'snake';
-        placeApple();
-      } else {
-        let last = snake.shift();
-        last.element.className = '';
+        alert('Game over!');
+        startGame();
       }
-      setTimeout(gameLoop, 200);
-    }
-  }
+      else {
+        let cell = board[snakeY][snakeX];
+        cell.element.className = 'snake';
+        snake.push(cell);
+        if (cell === apple) {
+          apple.element.className = 'snake';
+          placeApple();
+        } else {
+          let last = snake.shift();
+          last.element.className = '';
+        }
+        setTimeout(gameLoop, 200);
+      }
+    })();
+  })();
+
+
 
   function placeApple() {
     appleX = Math.floor(Math.random() * boardWidth);
@@ -109,5 +110,4 @@
       placeApple();
     apple.element.className = 'apple';
   }
-  startGame();
 })();
