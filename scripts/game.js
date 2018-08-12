@@ -12,6 +12,7 @@
   let appleY = 0;
   let snake = [];
   let apple = {};
+  let speed = 200;
 
   (function initBoard() {
     for (let i = 0; i < boardHeight; i++){
@@ -95,7 +96,7 @@
           let last = snake.shift();
           last.element.className = '';
         }
-        setTimeout(gameLoop, 200);
+        setTimeout(gameLoop, speed);
       }
     })();
   })();
