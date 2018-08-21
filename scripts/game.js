@@ -13,6 +13,7 @@
   let snake = [];
   let apple = {};
   let speed = 200;
+  let isKeyPressed = false;
 
   (function initBoard() {
     for (let i = 0; i < boardHeight; i++){
@@ -26,22 +27,24 @@
       board.push(row);
     }
     body.addEventListener('keydown', (event) => {
-      switch (event.key) {
-        case 'ArrowUp':
-          snakeDirection = (snakeDirection !== 'Down') ? 'Up' : snakeDirection;
-          break;
-        case 'ArrowDown':
-          snakeDirection = (snakeDirection !== 'Up') ? 'Down' : snakeDirection;
-          break;
-        case 'ArrowLeft':
-          snakeDirection = (snakeDirection !== 'Right') ? 'Left' : snakeDirection;
-          break;
-        case 'ArrowRight':
-          snakeDirection = (snakeDirection !== 'Left') ? 'Right' : snakeDirection;
-          break;
-        default:
-          return;
-      }
+      if (!isKeyPressed)
+        switch (event.key) {
+          case 'ArrowUp':
+            snakeDirection = (snakeDirection !== 'Down') ? 'Up' : snakeDirection;
+            break;
+          case 'ArrowDown':
+            snakeDirection = (snakeDirection !== 'Up') ? 'Down' : snakeDirection;
+            break;
+          case 'ArrowLeft':
+            snakeDirection = (snakeDirection !== 'Right') ? 'Left' : snakeDirection;
+            break;
+          case 'ArrowRight':
+            snakeDirection = (snakeDirection !== 'Left') ? 'Right' : snakeDirection;
+            break;
+          default:
+            return;
+        }
+      isKeyPressed = true;
       event.preventDefault();
     });
   })();
@@ -56,6 +59,7 @@
     apple = {};
     snakeLength = 3;
     snakeDirection = 'Up';
+    isKeyPressed = false;
     snakeX = Math.floor(Math.random() * (boardWidth-11) + 6);
     snakeY = Math.floor(Math.random() * (boardHeight-11) + 6);
     snake.push(board[snakeY+2][snakeX]);
@@ -100,6 +104,7 @@
           let last = snake.shift();
           last.element.className = '';
         }
+        isKeyPressed = false;
         setTimeout(gameLoop, speed);
       }
     })();
